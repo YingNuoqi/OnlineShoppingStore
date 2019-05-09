@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ynq.business.dao.ProductDao">
+
+	<!-- product table all fields -->
+	<sql id="allColumnList">
+		ID,
+		MODEL,
+		NAME,
+		CATEGORY_ID,
+		DESCRIPTION,
+		PRICE,
+		NUMBER,
+		IMGURLS,
+		BRAND,
+		COST
+	</sql>
+
+	<sql id="findListIds">
+		WHERE id IN
+		<foreach collection="list" item="ids" open="(" separator=","
+			close=")">
+			#{ids}
+		</foreach>
+	</sql>
+
+	<sql id="findStringIds">
+		WHERE id IN
+		<foreach item="item" index="index" collection="array" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</sql>
+
+	<sql id="queryClause">
+		where 1=1
+		<trim suffixOverrides=",">
+			<if test="model != null and model != ''">
+				and MODEL = #{model}
+			</if>
+			<if test="name != null and name != ''">
+				and NAME like '%${name}%'
+			</if>
+			<if test="categoryId != null and categoryId != -1 and categoryId != 0">
+				and CATEGORY_ID = #{categoryId}
+			</if>
+			<if test="description != null and description !='' ">
+				and DESCRIPTION like '%${description}%'
+			</if>
+			<if test="price != 0 ">
+				and PRICE = #{price}
+			</if>
+			<if test="brand != null and brand != 0">
+				and BRAND like '%$#{sex}%'
+			</if>
+		</trim>
+	</sql>
+
+	<insert id="add" parameterType="Object">
+		insert into product(
+		MODEL,
+		NAME,
+		CATEGORY_ID,
+		DESCRIPTION,
+		PRICE,
+		NUMBER,
+		IMGURLS,
+		BRAND,
+		COST)
+		values(
+		#{model, jdbcType=VARCHAR},
+		#{name,jdbcType=VARCHAR},
+		#{categoryId,jdbcType=NUMERIC},
+		#{description,jdbcType=VARCHAR},
+		#{price,jdbcType=NUMERIC},
+		#{number,jdbcType=NUMERIC},
+		#{imgUrls,jdbcType=VARCHAR},
+		#{brand,jdbcType=VARCHAR},
+		#{cost,jdbcType=NUMERIC},
+		)
+	</insert>
+
+	<update id="update" parameterType="Object">
+		update product
+		set MODEL = #{model, jdbcType=VARCHAR},
+		NAME = #{name,jdbcType=VARCHAR},
+		CATEGORY_ID = #{categoryId,jdbcType=NUMERIC},
+		DESCRIPTION =
+		#{description,jdbcType=VARCHAR},
+		PRICE = #{price,jdbcType=NUMERIC},
+		NUMBER = #{number,jdbcType=NUMERIC},
+		IMGURLS =
+		#{imgUrls,jdbcType=VARCHAR},
+		BRAND = #{brand,jdbcType=VARCHAR},
+		COST =
+		#{cost,jdbcType=NUMERIC},
+		where id=#{id}
+	</update>
+
+	<delete id="deleteById" parameterType="Object">
+		delete from product where id=#{id}
+	</delete>
+
+	<delete id="deleteByIds" parameterType="Object">
+		delete from product
+		<include refid="findListIds"></include>
+	</delete>
+
+	<delete id="deleteByCondition" parameterType="Object">
+		delete from product
+		<include refid="queryClause" />
+	</delete>
+
+	<select id="queryById" parameterType="Object"
+		resultType="com.ynq.business.entity.Product">
+		select
+		<include refid="allColumnList" />
+		from product
+		where id=#{id}
+	</select>
+
+	<select id="queryByCondition" parameterType="Object"
+		resultType="com.ynq.business.entity.Product">
+		select
+		<include refid="allColumnList" />
+		from product
+		<include refid="queryClause" />
+	</select>
+
+	<select id="queryCountByCondition" resultType="java.lang.Integer"
+		parameterType="Object">
+		select count(*) from product
+		<include refid="queryClause"></include>
+	</select>
+
+
+</mapper>   

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ynq.business.dao.ShopCarDao">
+
+	<!-- user table all fields -->
+	<sql id="allCarProductColumnList">
+
+	</sql>
+
+	<insert id="addProductToShopCar" parameterType="Object">
+		insert into tb_car_product(user_id,product_id,product_count,add_date)
+		values(#{userId},#{productId},#{productCount},now())
+	</insert>
+
+	<delete id="delProductByProductId" parameterType="Object">
+		delete from tb_car_product where product_id = #{productId} and user_id =
+		#{userId}
+	</delete>
+
+	<update id="updateProductCount" parameterType="Object">
+		update tb_car_product set product_count = #{productCount} where product_id =
+		#{productId} and user_id = #{userId}
+	</update>
+
+	<delete id="clearShopCarByUserId" parameterType="Object">
+		delete from tb_car_product where user_id = #{userId}
+	</delete>
+
+	<select id="getCarProductsByUserId" parameterType="Object"
+		resultType="CarProduct">
+		select
+		c.id,
+		c.user_id as userId,
+		c.product_id as productId,
+		c.product_count as
+		productCount,
+		c.add_date as addDate,
+		p.name as productName,
+		p.price as
+		productPrice
+		from tb_car_product c
+		left join product p on c.product_Id = p.id
+		where c.user_id = #{userId}
+	</select>
+
+	<select id="getListByCondition" parameterType="Object"
+		resultType="CarProduct">
+		select
+		c.id,
+		c.user_id as userId,
+		c.product_id as productId,
+		c.product_count as
+		productCount,
+		c.add_date as addDate,
+		p.name as productName,
+		p.price as
+		productPrice
+		from tb_car_product c
+		left join product p on c.product_Id = p.id
+		where c.user_id = #{userId} and c.product_id=#{productId}
+	</select>
+
+</mapper>   

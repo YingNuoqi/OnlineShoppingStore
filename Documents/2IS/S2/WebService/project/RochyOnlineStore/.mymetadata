@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="RochyOnlineStore"
+  id="myeclipse.1457574359386"
+  context-root="/RochyOnlineStore"
+  j2ee-spec="5.0"
+  archive="RochyOnlineStore.war">
+  <attributes>
+    <attribute name="webrootdir" value="WebRoot" />
+  </attributes>
+</project-module>
+

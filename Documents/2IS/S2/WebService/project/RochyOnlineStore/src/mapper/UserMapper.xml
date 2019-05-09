@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ynq.business.dao.UserDao">
+
+	<!-- user table all fields -->
+	<sql id="allColumnList">
+		ID,
+		NAME,
+		LOGINNAME,
+		LOGINPASS,
+		ADDRESS,
+		NUMBER,
+		TYPE,
+		SEX,
+		BIRTHDAY,
+		COMPANYTYPE,
+		COMPANYSIZE,
+		COMPANYOWNER,
+		COMPANYNUMBER
+	</sql>
+
+	<sql id="findListIds">
+		WHERE id IN
+		<foreach item="list" index="list" collection="list" open="("
+			separator="," close=")">
+			#{list.id}
+		</foreach>
+	</sql>
+
+	<sql id="findStringIds">
+		WHERE id IN
+		<foreach item="item" index="index" collection="array" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</sql>
+
+	<sql id="queryClause">
+		where 1=1
+		<trim suffixOverrides=",">
+			<if test="id != null and id != ''">
+				and ID = #{id}
+			</if>
+			<if test="name != null and name != ''">
+				and NAME like '%${name}%'
+			</if>
+			<if test="loginName != null and loginName != ''">
+				and LOGINNAME = #{loginName}
+			</if>
+			<if test="loginPass != null and loginPass != ''">
+				and LOGINPASS = #{loginPass}
+			</if>
+			<if test="address != null and address !='' ">
+				and address like '%${address}%'
+			</if>
+			<if test="number != null and number != '' ">
+				and number = #{number}
+			</if>
+			<if test="type != null and type !=-1 ">
+				and type = #{type}
+			</if>
+			<if test="sex != null and sex != 0">
+				and sex = #{sex}
+			</if>
+			<if test="birthday != null and birthday != '' ">
+				and birthday = #{birthday}
+			</if>
+			<if test="companyType != null and companyType !='' ">
+				and companyType = #{companyType}
+			</if>
+			<if test="companySize != null and companySize != 0">
+				and companySize = #{companySize}
+			</if>
+			<if test="companyOwner != null and companyOwner !='' ">
+				and companyOwner = #{companyOwner}
+			</if>
+			<if test="companyNumber != null and companyNumber != 0">
+				and companyNumber = #{companyNumber}
+			</if>
+		</trim>
+	</sql>
+
+	<insert id="add" parameterType="Object">
+		insert into customer(
+		NAME,
+		LOGINNAME,
+		LOGINPASS,
+		ADDRESS,
+		NUMBER,
+		TYPE,
+		SEX,
+		BIRTHDAY,
+		COMPANYTYPE,
+		COMPANYSIZE,
+		COMPANYOWNER,
+		COMPANYNUMBER)
+		values(
+		#{name, jdbcType=VARCHAR},
+		#{loginName,jdbcType=VARCHAR},
+		#{loginPass,jdbcType=VARCHAR},
+		#{address,jdbcType=VARCHAR},
+		#{number,jdbcType=VARCHAR},
+		#{type,jdbcType=NUMERIC},
+		#{sex,jdbcType=VARCHAR},
+		#{birthday,jdbcType=DATE},
+		#{companyType,jdbcType=VARCHAR},
+		#{companySize,jdbcType=NUMERIC},
+		#{companyOwner,jdbcType=VARCHAR},
+		#{companyNumber,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="update" parameterType="Object">
+		update customer
+		set NAME = #{name, jdbcType=VARCHAR},
+		LOGINNAME =
+		#{loginName,jdbcType=VARCHAR},
+		LOGINPASS =
+		#{loginPass,jdbcType=VARCHAR},
+		ADDRESS = #{address,jdbcType=VARCHAR},
+		NUMBER = #{number,jdbcType=VARCHAR},
+		TYPE = #{type,jdbcType=NUMERIC},
+		SEX = #{sex,jdbcType=VARCHAR},
+		BIRTHDAY = #{birthday,jdbcType=DATE},
+		COMPANYTYPE = #{companyType,jdbcType=VARCHAR},
+		COMPANYSIZE =
+		#{companySize,jdbcType=NUMERIC},
+		COMPANYOWNER =
+		#{companyOwner,jdbcType=VARCHAR},
+		COMPANYNUMBER =
+		#{companyNumber,jdbcType=VARCHAR}
+		where id=#{id}
+	</update>
+
+	<delete id="deleteById" parameterType="Object">
+		delete from customer where id=#{id}
+	</delete>
+
+	<delete id="deleteByIds" parameterType="Object">
+		delete from customer
+		<include refid="findStringIds"></include>
+	</delete>
+
+	<delete id="deleteByCondition" parameterType="Object">
+		delete from customer
+		<include refid="queryClause" />
+	</delete>
+
+	<select id="queryById" parameterType="Object"
+		resultType="com.ynq.business.entity.User">
+		select
+		<include refid="allColumnList" />
+		from customer where ID = #{id};
+	</select>
+
+	<select id="queryByIds" parameterType="Object"
+		resultType="com.ynq.business.entity.User">
+		select
+		<include refid="allColumnList" />
+		from customer
+		<include refid="findStringIds"></include>
+	</select>
+
+	<select id="queryByCondition" parameterType="Object"
+		resultType="com.ynq.business.entity.User">
+		select
+		<include refid="allColumnList" />
+		from customer
+		<include refid="queryClause" />
+	</select>
+
+	<select id="queryCountByCondition" resultType="java.lang.Integer"
+		parameterType="Object">
+		select count(*) from customer
+		<include refid="queryClause"></include>
+	</select>
+
+
+</mapper>   

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ynq.business.dao.StatisticsCategoryDao">
+
+	<!-- user table all fields -->
+	<sql id="allColumnList">
+		ID,
+		CATEGORY_ID,
+		NUM
+	</sql>
+
+	<select id="queryByCondition" parameterType="Object"
+		resultType="com.ynq.business.entity.StatisticsCategory">
+		select
+		ID,
+		CATEGORY_ID as categoryId,
+		NUM
+		from statistics_category
+	</select>
+
+	<update id="updateAddOne" parameterType="Object">
+		update statistics_category
+		set num=num+1
+		where category_id=#{categoryId}
+	</update>
+
+</mapper>   

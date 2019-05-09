@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ynq.business.dao.ProductOrderDao">
+
+	<!-- TB_PRODUCT_ORDER table all fields -->
+	<sql id="allColumnList">
+		ID,
+		PRODUCT_ID,
+		ORDER_ID,
+		NUMBER,
+		USER_ID
+	</sql>
+
+	<sql id="findListIds">
+		WHERE id IN
+		<foreach collection="list" item="ids" open="(" separator=","
+			close=")">
+			#{ids}
+		</foreach>
+	</sql>
+
+	<sql id="findStringIds">
+		WHERE id IN
+		<foreach item="item" index="index" collection="array" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</sql>
+
+	<sql id="queryClause">
+		where 1=1
+		<trim suffixOverrides=",">
+			<if test="productId != null and productId != -1L and productId!=0L">
+				and PRODUCT_ID = #{productId}
+			</if>
+			<if test="orderId != null and orderId != -1L and orderId !=0L">
+				and ORDER_ID = #{orderId}
+			</if>
+			<if test="number != null and number != -1L and number !=0L">
+				and NUMBER = #{number}
+			</if>
+			<if test="userId != null and userId != -1L and userId !=0L">
+				and USER_ID = #{userId}
+			</if>
+		</trim>
+	</sql>
+
+
+	<insert id="add" parameterType="Object">
+		insert into TB_PRODUCT_ORDER(
+		PRODUCT_ID,
+		ORDER_ID,
+		NUMBER,
+		USER_ID)
+		values(
+		#{productId,jdbcType=NUMERIC},
+		#{orderId,jdbcType=NUMERIC},
+		#{number,jdbcType=NUMERIC},
+		#{userId,jdbcType=NUMERIC}
+		)
+	</insert>
+
+	<update id="update" parameterType="Object">
+		update TB_PRODUCT_ORDER
+		set PRODUCT_ID = #{productId,jdbcType=NUMERIC},
+		ORDER_ID =
+		#{orderId,jdbcType=NUMERIC},
+		NUMBER = #{number,jdbcType=NUMERIC},
+		USER_ID = #{userId,jdbcType=NUMERIC}
+		where id=#{id}
+	</update>
+
+	<delete id="deleteById" parameterType="Object">
+		delete from TB_PRODUCT_ORDER where id=#{id}
+	</delete>
+
+	<delete id="deleteByIds" parameterType="Object">
+		delete from TB_PRODUCT_ORDER
+		<include refid="findListIds"></include>
+	</delete>
+
+	<delete id="deleteByCondition" parameterType="Object">
+		delete from TB_PRODUCT_ORDER
+		<include refid="queryClause" />
+	</delete>
+
+	<select id="queryById" parameterType="Object"
+		resultType="com.ynq.business.entity.ProductOrder">
+		select
+		<include refid="allColumnList" />
+		from TB_PRODUCT_ORDER
+		where id=#{id}
+	</select>
+
+	<select id="queryByCondition" parameterType="Object"
+		resultType="com.ynq.business.entity.ProductOrder">
+		select
+		<include refid="allColumnList" />
+		from TB_PRODUCT_ORDER
+		<include refid="queryClause" />
+	</select>
+
+	<select id="queryCountByCondition" resultType="java.lang.Integer"
+		parameterType="Object">
+		select count(*) from TB_PRODUCT_ORDER
+		<include refid="queryClause"></include>
+	</select>
+
+	<select id="getMaxId" resultType="long">
+		SELECT max(ID) from TB_PRODUCT_ORDER
+	</select>
+</mapper>   
